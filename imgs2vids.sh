@@ -21,7 +21,7 @@ function render_video () {
     mkdir -p "$1"
     cd /tmp/asjpg
     ffmpeg -y -hide_banner -loglevel error \
-        -i "$2"_t%d_p0.ome.jpg \
+        -i "${2%_Y1}"_t%d_p0.ome.jpg \
         -r 2 \
         -c:v libx264 \
         -vf "fps=25,format=yuv420p" \
