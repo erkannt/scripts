@@ -23,4 +23,3 @@ for subdir in */; do
     convert_images "$DIR" "${subdir%/}"
     render_video "${subdir%/}"
 done
-
