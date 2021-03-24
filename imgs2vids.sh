@@ -1,4 +1,15 @@
 #!/bin/bash
+
+# Convert folders of 16bit tiffs to mp4 videos
+#
+# Given `input_root_dir` and `output_root_dir`:
+# - convert each folder of tiffs int a folder of jpgs in /tmp
+# - go from 16bit to 8bit images, multiplying the brightness by IMAGE_VALUE_MULTIPLIER
+# - convert to mp4
+# - save video into `output_root_dir` under the name of the folder containing the tiffs
+#
+# Requires: imagemagick and ffmpeg
+
 set -euo pipefail
 
 input_root_dir="$1"
