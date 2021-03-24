@@ -1,37 +1,51 @@
 #!/bin/bash
 set -euo pipefail
 
-DIR="$1"
-OUTPUT="$2"
+input_root_dir="$1"
+output_root_dir="$2"
+
+IMAGE_VALUE_MULTIPLIER=4
 
 function convert_images () {
+    root_dir="$1"
+    sub_dir="$2"
+
     mkdir -p /tmp/asjpg
     rm -f /tmp/asjpg/*
-    cd "$1"/"$2"
+
+    cd "$root_dir"/"$sub_dir"
     mogrify \
         -depth 8 \
-        -evaluate multiply 4 \
+        -evaluate multiply ${IMAGE_VALUE_MULTIPLIER} \
         -format jpg \
         -path /tmp/asjpg \
         *.tiff \
-        || echo "ERROR: mogrify failure --" "$1"/"$2"
+        || echo "ERROR: mogrify failure --" "$root_dir"/"$sub_dir"
 }
 
+
 function render_video () {
-    mkdir -p "$1"
+    output_dir="$1"
+    input_name="$2"
+    input_img_name_fragment="${2%_Y1}"
+
+    mkdir -p "$output_dir"
     cd /tmp/asjpg
+
     ffmpeg -y -hide_banner -loglevel error \
-        -i "${2%_Y1}"_t%d_p0.ome.jpg \
+        -i "$input_img_name_fragment"_t%d_p0.ome.jpg \
         -r 2 \
         -c:v libx264 \
         -vf "fps=25,format=yuv420p" \
-        "$1"/"$2".mp4 \
-        || echo "ERROR: ffmpeg failure --" "$1"/"$2"
+        "$output_dir"/"$input_name".mp4 \
+        || echo "ERROR: ffmpeg failure --" "$output_dir"/"$input_name"
+
     rm -rf /tmp/asjpg
 }
 
-cd "$DIR"
+
+cd "$input_root_dir"
 for subdir in */; do
-    convert_images "$DIR"    "${subdir%/}"
-    render_video   "$OUTPUT" "${subdir%/}"
+    convert_images "$input_root_dir" "${subdir%/}"
+    render_video "$output_root_dir" "${subdir%/}"
 done
