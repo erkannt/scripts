@@ -8,7 +8,7 @@ function convert_images () {
     mkdir -p /tmp/asjpg
     rm -f /tmp/asjpg/*
     cd "$1"/"$2"
-    mogrify -path /tmp/asjpg -format jpg -depth 8 -evaluate multiply 4 -- *.tiff
+    mogrify -path /tmp/asjpg -format jpg -depth 8 -evaluate multiply 4 *.tiff
 }
 
 function render_video () {
