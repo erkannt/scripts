@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-DIR="/media/hff/My Passport/Eva K/191021_C2_DIV2_cort_neurons_F4/"
+DIR="$1"
 
 function convert_images () {
     mkdir -p /tmp/asjpg
